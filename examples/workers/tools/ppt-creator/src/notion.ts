@@ -1,5 +1,5 @@
 import type { Client } from "@notionhq/client";
-import type { Slide, RichText } from "./types.js";
+import type { Slide } from "./types.js";
 
 export async function getPageTitle(notion: Client, pageId: string): Promise<string> {
 	const page = (await notion.pages.retrieve({ page_id: pageId })) as Record<
@@ -21,93 +21,6 @@ export function extractPageId(input: string): string {
 	const match = clean.match(/([a-f0-9]{32})/i);
 	return match ? match[1] : input;
 }
-
-export function plainText(richText: RichText[]): string {
-	return richText.map((t) => t.plain_text).join("");
-}
-
-export async function getAllBlocks(notion: Client, blockId: string) {
-	const blocks: Array<Record<string, any>> = [];
-	let cursor: string | undefined;
-	do {
-		const response = await notion.blocks.children.list({
-			block_id: blockId,
-			start_cursor: cursor,
-			page_size: 100,
-		});
-		blocks.push(...(response.results as Array<Record<string, any>>));
-		cursor = response.has_more
-			? (response.next_cursor ?? undefined)
-			: undefined;
-	} while (cursor);
-	return blocks;
-}
-
-export function groupBlocksIntoSlides(
-	blocks: Array<Record<string, any>>,
-	pageTitle: string,
-): Slide[] {
-	const slides: Slide[] = [];
-	let current: Slide | null = null;
-
-	for (const block of blocks) {
-		const type: string = block.type;
-		const data = block[type];
-
-		if (type === "heading_1" || type === "heading_2" || type === "heading_3") {
-			if (current) slides.push(current);
-			current = { title: plainText(data.rich_text), items: [] };
-			continue;
-		}
-
-		if (!current) {
-			current = { title: pageTitle, items: [] };
-		}
-
-		switch (type) {
-			case "paragraph": {
-				const text = plainText(data.rich_text);
-				if (text) current.items.push({ text, type: "text" });
-				break;
-			}
-			case "bulleted_list_item": {
-				const text = plainText(data.rich_text);
-				if (text) current.items.push({ text, type: "bullet" });
-				break;
-			}
-			case "numbered_list_item": {
-				const text = plainText(data.rich_text);
-				if (text) current.items.push({ text, type: "numbered" });
-				break;
-			}
-			case "to_do": {
-				const text = plainText(data.rich_text);
-				if (text)
-					current.items.push({
-						text,
-						type: "todo",
-						checked: data.checked,
-					});
-				break;
-			}
-			case "code": {
-				const text = plainText(data.rich_text);
-				if (text) current.items.push({ text, type: "code" });
-				break;
-			}
-			case "quote": {
-				const text = plainText(data.rich_text);
-				if (text) current.items.push({ text, type: "quote" });
-				break;
-			}
-		}
-	}
-
-	if (current) slides.push(current);
-	return slides;
-}
-
-// --- Markdown API approach (single call, no pagination) ---
 
 export async function getPageMarkdown(pageId: string): Promise<string> {
 	const baseUrl = process.env.NOTION_API_BASE_URL ?? "https://api.notion.com";

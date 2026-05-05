@@ -8,7 +8,3 @@ export interface Slide {
 	title: string;
 	items: SlideItem[];
 }
-
-export interface RichText {
-	plain_text: string;
-}
