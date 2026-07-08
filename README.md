@@ -130,6 +130,10 @@ and a **webhook** handles events from another service. See the complete
 
 ### Add tools to a Notion Agent
 
+An agent tool can coordinate a workflow across multiple apps. For example, the
+[Sentry to PagerDuty incident tools](workers/sentry-pagerduty-incident-tools/)
+find and inspect an issue in Sentry, then declare an incident in PagerDuty.
+
 | Task                                                | Worker                                                                            | Integration         |
 | --------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------- |
 | Inspect DAGs, runs, tasks, and logs                 | [Airflow](workers/airflow/)                                                       | Apache Airflow      |
@@ -139,6 +143,7 @@ and a **webhook** handles events from another service. See the complete
 | Review and publish an existing draft release        | [GitHub draft release tools](workers/github-draft-release-tools/)                 | GitHub              |
 | Query a database with read-only SQL                 | [Postgres query](workers/postgres-query/)                                         | PostgreSQL          |
 | Turn a Notion page into PowerPoint slides (`.pptx`) | [PowerPoint creator](workers/powerpoint-creator/)                                 | Notion, PowerPoint  |
+| Find Sentry issues and declare PagerDuty incidents  | [Sentry to PagerDuty incident tools](workers/sentry-pagerduty-incident-tools/)    | Sentry, PagerDuty   |
 | Query a warehouse with read-only SQL                | [Snowflake query](workers/snowflake-query/)                                       | Snowflake           |
 | Learn the database-query pattern with seeded data   | [SQLite query](workers/sqlite-query/)                                             | SQLite              |
 | Inspect, promote, or roll back a Vercel deployment  | [Vercel production deployment tools](workers/vercel-production-deployment-tools/) | Notion, Vercel      |
