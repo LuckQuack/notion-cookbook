@@ -5,10 +5,10 @@
 > Notion Apps and the Apps SDK are early alpha features and can introduce
 > breaking changes.
 
-This template builds a workflow-only Notion App with the
+This template builds a workflow and custom block Notion App with the
 [`@notionhq/apps`](https://www.npmjs.com/package/@notionhq/apps) SDK. The
 included `sayHello` workflow runs from a recurring trigger and demonstrates a
-replay-safe durable step.
+replay-safe durable step. The hello block demonstrates an interactive browser UI.
 
 ## Prerequisites
 
@@ -29,16 +29,19 @@ The build discovers workflow files by convention and produces:
 
 ```text
 dist/
-  manifest.json  App metadata and workflow configuration
+  manifest.json  App metadata, workflows, and block declarations
   worker.js      Deployable workflow bundle
 ```
 
 ## Project structure
 
 ```text
-.agents/       Workflow-only coding-agent guidance and skills
+.agents/       Coding-agent guidance and skills
 src/workflows/
   sayHello.ts  Example recurring workflow
+src/customBlocks/
+  hello.ts     Browser project declaration
+blocks/hello/  Browser source, Vite config, and separate browser tsconfig
 ```
 
 Every TypeScript file directly inside `src/workflows/` defines one workflow.
