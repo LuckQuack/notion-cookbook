@@ -1,6 +1,6 @@
-import { createCustomBlock } from "@notionhq/apps/custom-block"
+import { customBlock } from "@notionhq/apps"
 
-export default createCustomBlock({
+export default customBlock({
   path: "./blocks/hello",
   slashCommand: "app-hello",
   dataSources: {},
